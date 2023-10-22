@@ -91,7 +91,30 @@ app.get('/cart/:userId', async (req, res) => {
     const cartItems = await cursor.toArray();
     res.send(cartItems);
 });
+app.get('/cart/:userId/:productId', async (req, res) => {
+    const id= req.params.productId;
+    const cursor = cartCollection.find({ productId: id });
+    const cartItem = await cursor.toArray();
+        
+        res.send(cartItem);
+    });
 
+
+    app.delete('/cart/:userId/:productId', async (req, res) => {
+        const userId = req.params.userId;
+        const productId = req.params.productId;
+        try {
+            const result = await cartCollection.deleteOne({ userId, productId });
+            
+            res.send(result)
+        }
+        
+         catch (error) {
+            console.error('Error deleting cart item:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+    
 
 
 
